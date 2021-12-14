@@ -1,19 +1,25 @@
+const fs = require('fs');
 const express = require('express');
 
+// SERVER
 const app = express();
+const toursData = JSON.parse(
+  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8')
+);
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello from the server');
+// api/tours ROUTE
+app.get('/api/v1/tours', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    results: toursData.length,
+    data: {
+      tours: toursData,
+    },
+  });
 });
 
-app.post('/', (req, res) => {
-  res.send('You can post in this route...');
-});
-
-app.get('/user', (req, res) => {
-  res.json({ name: 'luke', age: 28, isSingle: true });
-});
-
-app.listen(3000, () => {
-  console.log('App running...');
+// SERVER LISTEN
+port = 3000;
+app.listen(port, () => {
+  console.log(`App running in port ${port}!`);
 });
