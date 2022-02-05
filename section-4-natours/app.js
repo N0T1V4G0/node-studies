@@ -11,7 +11,7 @@ const toursData = JSON.parse(
 app.use(express.json());
 
 // api/tours ROUTES
-// GET tours
+// GET all tours
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -21,7 +21,7 @@ app.get('/api/v1/tours', (req, res) => {
     },
   });
 });
-// POST tours
+// POST tour
 app.post('/api/v1/tours', (req, res) => {
   const newId = toursData[toursData.length - 1].id + 1;
   const newTour = { id: newId, ...req.body };
@@ -39,6 +39,24 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
+});
+// GET single tour
+app.get('/api/v1/tours/:id', (req, res) => {
+  const tourId = req.params.id * 1;
+  const tour = toursData.find((el) => el.id === tourId);
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
 });
 
 // SERVER LISTEN
