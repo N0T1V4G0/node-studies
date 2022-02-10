@@ -97,9 +97,44 @@ const deleteTour = (req, res) => {
     data: null,
   });
 };
+
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+  });
+};
+
+const createNewUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+  });
+};
+
 // 4) ROUTES
-app.route('/api/v1/tours').get(getAllTours).post(postNewTour);
-app.route('/api/v1/tours/:id').get(getTour).patch(patchTour).delete(deleteTour);
+const toursRouter = express.Router();
+const userRouter = express.Router();
+app.use('/api/v1/tours', toursRouter);
+app.use('/api/v1/users', userRouter);
+toursRouter.route('/').get(getAllTours).post(postNewTour);
+toursRouter.route('/:id').get(getTour).patch(patchTour).delete(deleteTour);
 
 // app.get('/api/v1/tours', getAllTours);
 // app.post('/api/v1/tours', postNewTour);
@@ -107,6 +142,8 @@ app.route('/api/v1/tours/:id').get(getTour).patch(patchTour).delete(deleteTour);
 // app.patch('/api/v1/tours/:id', patchTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+userRouter.route('/').get(getAllUsers).post(createNewUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 // 5) SERVER LISTEN
 port = 3000;
 app.listen(port, () => {
