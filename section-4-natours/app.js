@@ -7,12 +7,17 @@ const toursData = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8')
 );
 
-//Middleware
+// Middleware
 app.use(express.json());
+// Custom middleware
+app.use((req, res, next) => {
+  req.body.exemple = 'Whatever works';
+  next();
+});
 
-// api/tours ROUTES
-// GET all tours
-app.get('/api/v1/tours', (req, res) => {
+// ROUTE HANDLERS
+const getAllTours = (req, res) => {
+  console.log(req.body);
   res.status(200).json({
     status: 'success',
     results: toursData.length,
@@ -20,9 +25,9 @@ app.get('/api/v1/tours', (req, res) => {
       tours: toursData,
     },
   });
-});
-// POST tour
-app.post('/api/v1/tours', (req, res) => {
+};
+
+const postNewTour = (req, res) => {
   const newId = toursData[toursData.length - 1].id + 1;
   const newTour = { id: newId, ...req.body };
   const newTours = JSON.stringify([...toursData, newTour]);
@@ -39,9 +44,9 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
-});
-// GET single tour
-app.get('/api/v1/tours/:id', (req, res) => {
+};
+
+const getTour = (req, res) => {
   const tourId = req.params.id * 1;
   const tour = toursData.find((el) => el.id === tourId);
   if (!tour) {
@@ -57,10 +62,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
       tour,
     },
   });
-});
+};
 
-// PATCH tour
-app.patch('/api/v1/tours/:id', (req, res) => {
+const patchTour = (req, res) => {
   const tourId = req.params.id * 1;
   const tour = toursData.find((el) => el.id === tourId);
   if (!tour) {
@@ -76,10 +80,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       tour: '<Updated tour here>',
     },
   });
-});
+};
 
-// DELETE tour
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   const tourId = req.params.id * 1;
   const tour = toursData.find((el) => el.id === tourId);
   if (!tour) {
@@ -93,7 +96,16 @@ app.delete('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: null,
   });
-});
+};
+
+app.route('/api/v1/tours').get(getAllTours).post(postNewTour);
+app.route('/api/v1/tours/:id').get(getTour).patch(patchTour).delete(deleteTour);
+
+// app.get('/api/v1/tours', getAllTours);
+// app.post('/api/v1/tours', postNewTour);
+// app.get('/api/v1/tours/:id', getTour);
+// app.patch('/api/v1/tours/:id', patchTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
 
 // SERVER LISTEN
 port = 3000;
