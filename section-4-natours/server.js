@@ -18,26 +18,8 @@ mongoose
   })
   .then((conObj) => {
     console.log('db running');
-    console.log(conObj.connections);
+    // console.log(conObj.connections);
   });
-
-const tourSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Missing tour name'],
-    unique: true,
-  },
-  rating: {
-    type: Number,
-    default: 4.5,
-  },
-  price: {
-    type: Number,
-    required: [true, 'Missing tour price'],
-  },
-});
-
-const Tour = mongoose.model('Tour', tourSchema);
 
 port = 3000 || process.env.PORT;
 app.listen(port, () => {
